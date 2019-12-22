@@ -1,5 +1,10 @@
 // ref: https://umijs.org/config/
+import path from 'path';
+
 export default {
+  alias: {
+    '@': path.resolve(__dirname, 'src'),
+  },
   treeShaking: true,
   routes: [
     {
@@ -17,6 +22,13 @@ export default {
       ],
     },
   ],
+  proxy: {
+    '/api/*': {
+      target: 'http://localhost:7001/api',
+      pathRewrite: { '^/api': '' },
+      changeOrigin: true,
+    },
+  },
   plugins: [
     // ref: https://umijs.org/plugin/umi-plugin-react.html
     [
