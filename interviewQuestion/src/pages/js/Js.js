@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Button, Card, message, PageHeader } from 'antd';
+import { Button, Card, message, PageHeader, Icon, Tooltip, Popconfirm } from 'antd';
 import AddInterviewQuestion from '@/components/AddInterviewQuestion';
 import * as api from '../../services/api';
 import NoMoreQuestion from '@/components/NoMoreQuestion';
@@ -21,7 +21,7 @@ export default class Js extends PureComponent {
   }
 
   getData = () => {
-    api.getJsQuestion().then((response) => {
+    api.getJsQuestion().then(response => {
       this.setState({
         questions: response,
       });
@@ -35,30 +35,32 @@ export default class Js extends PureComponent {
     });
   };
 
-
   deleteQuestion = () => {
     const { num, questions } = this.state;
     const deleteId = _.get(questions, `[${num}]._id`);
-    api.destroyJsQuestion({
-      id: deleteId,
-    })
+    api
+      .destroyJsQuestion({
+        id: deleteId,
+      })
       .then(() => {
         message.info('删除成功');
         const newQuestions = questions.filter(question => question._id !== deleteId);
-        this.setState({
-          questions: newQuestions,
-        }, () => {
-          if (num > 0) {
-            this.setState({
-              num: num - 1,
-            });
-          } else {
-            this.setState({
-              num: num,
-            });
-          }
-        });
-
+        this.setState(
+          {
+            questions: newQuestions,
+          },
+          () => {
+            if (num > 0) {
+              this.setState({
+                num: num - 1,
+              });
+            } else {
+              this.setState({
+                num: num,
+              });
+            }
+          },
+        );
       });
   };
 
@@ -92,58 +94,80 @@ export default class Js extends PureComponent {
           }}
           title="js面试题"
           extra={
-            <Button type='primary' onClick={this.addQuestion}>添加试题</Button>
+            <Button type="primary" onClick={this.addQuestion}>
+              添加试题
+            </Button>
           }
         />
-        <Card style={{ margin: 24 }}>
-          {
-            questions[num] ? (
-              <div>
-                <p>
-                  <span>{num + 1}.</span>
-                  {questions[num].title}
-                </p>
-                <p>
-                  解析：{questions[num].analysis}
-                </p>
-                <div
-                  style={{ float: 'right' }}>
-
-                  <Button
-                    onClick={this.deleteQuestion}
-                    className='rightDistance'
-                    type='danger'>
-                    删除
-                  </Button>
+        <Card style={{ margin: 12, overflow: 'hidden' }}>
+          {questions[num] ? (
+            <div>
+              <p>
+                <span>{num + 1}.</span>
+                {questions[num].title}
+              </p>
+              <p>
+                解析：
+                <pre>{questions[num].analysis}</pre>
+              </p>
+              <div style={{ float: 'right' }}>
+                {num > 0 ? (
+                  <Tooltip title="上一题">
+                    <Button
+                      type="primary"
+                      className="rightComponentDistance"
+                      onClick={() => {
+                        this.setState({ num: num - 1 });
+                      }}
+                    >
+                      <Icon type="left" />
+                    </Button>
+                  </Tooltip>
+                ) : null}
+                <Popconfirm
+                  title={'确定删除么?'}
+                  okText={'确定'}
+                  cancelText={'取消'}
+                  onConfirm={this.deleteQuestion}
+                >
+                  <Tooltip title="删除">
+                    <Button className="rightComponentDistance" type="danger">
+                      <Icon type="delete" />
+                    </Button>
+                  </Tooltip>
+                </Popconfirm>
+                <Tooltip title="编辑">
                   <Button
                     onClick={this.updateQuestion}
-                    className='rightDistance'
-                    type='primary'>
-                    修改
+                    className="rightComponentDistance"
+                    type="primary"
+                  >
+                    <Icon type="edit" />
                   </Button>
+                </Tooltip>
+                <Tooltip title="下一题">
                   <Button
-                    type='primary'
+                    type="primary"
                     onClick={() => {
                       this.setState({ num: num + 1 });
                     }}
                   >
-                    下一题
+                    <Icon type="right" />
                   </Button>
-                </div>
-
+                </Tooltip>
               </div>
-            ) : (
-              <NoMoreQuestion toNumOne={this.toNumOne}/>
-            )
-          }
-
+            </div>
+          ) : (
+            <NoMoreQuestion toNumOne={this.toNumOne} />
+          )}
         </Card>
         <AddInterviewQuestion
           visible={visible}
           onCancel={this.onCancel}
           operationType={operationType}
           getData={this.getData}
-          questionDetail={_.get(questions, `[${num}]`, {})}/>
+          questionDetail={_.get(questions, `[${num}]`, {})}
+        />
       </div>
     );
   }

@@ -48,7 +48,7 @@ class AddInterviewQuestion extends PureComponent {
         } else {
           api.updateJsQuestion({ ...values, id: questionDetail._id })
             .then(() => {
-              message.info('添加成功');
+              message.info('修改成功');
               onCancel();
             }).catch(() => {
             onCancel();
@@ -94,10 +94,6 @@ class AddInterviewQuestion extends PureComponent {
           <Form.Item>
             {getFieldDecorator('analysis', {
               initialValue: operationType === 'add' ? '' : questionDetail.analysis,
-              rules: [{
-                required: true,
-                message: '请输入试题解析！',
-              }],
             })(
               <TextArea rows={5} placeholder={'请输入试题解析'}/>,
             )}
