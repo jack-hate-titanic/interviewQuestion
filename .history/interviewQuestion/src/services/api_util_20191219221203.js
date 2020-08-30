@@ -32,11 +32,11 @@ export function apiDELETE(url, params = {}) {
   });
 }
 
-export const apiFileUpload = (url, formData = {}, method = 'post') => {
+export const apiFileUpload = (url, formData = {}, method='put') => {
   return request({
     url,
     method,
     data: formData,
-    config: { headers: { 'Content-Type': 'multipart/form-data' } },
+    config: { headers: { 'Content-Type': 'multipart/form-data' }}
   });
-};
+}

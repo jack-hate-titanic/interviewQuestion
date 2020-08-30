@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Button, Card, message, PageHeader, Icon, Tooltip, Popconfirm, Table, Modal } from 'antd';
+import { Button, Card, message, PageHeader, Icon, Tooltip, Popconfirm, Table } from 'antd';
 import AddInterviewQuestion from '@/components/AddInterviewQuestion';
 import * as api from '../../services/api';
 import NoMoreQuestion from '@/components/NoMoreQuestion';
@@ -245,14 +245,7 @@ export default class Js extends PureComponent {
             </div>
           )}
         </Card>
-        <Modal
-          visible={visible}
-          title="创建试题"
-          destroyOnClose={true}
-          width={1000}
-          footer={false}
-          onCancel={this.onCancel}
-        >
+        <Modal visible={visible} title="创建试题" destroyOnClose={true} width={1000} footer={false}>
           <AddInterviewQuestion
             onCancel={this.onCancel}
             operationType={operationType}

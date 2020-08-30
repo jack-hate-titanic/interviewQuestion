@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Form, Modal, Input, message, Button } from 'antd';
+import { Form, Modal, Input, message } from 'antd';
 import * as api from '@/services/api';
 import PropTypes from 'prop-types';
 import BraftEditor from 'braft-editor';
@@ -98,7 +98,7 @@ class AddInterviewQuestion extends PureComponent {
     const { onCancel, questionDetail, operationType } = this.props;
 
     return (
-      <Form className="login-form" onSubmit={this.onCreate}>
+      <Form className="login-form">
         <Form.Item>
           {getFieldDecorator('title', {
             initialValue: operationType === 'add' ? '' : questionDetail.title,
@@ -113,14 +113,14 @@ class AddInterviewQuestion extends PureComponent {
         <Form.Item>
           <Editor onChange={this.onChange} editorState={editorState} />
         </Form.Item>
-        <Form.Item label={<span></span>} colon={false} style={{ textAlign: 'right' }}>
-          <Button style={{ marginRight: 24 }} onClick={onCancel}>
+        <FormItem label={<span></span>} colon={false}>
+          <Button className="normalMarginRight" onClick={onCancel}>
             取消
           </Button>
           <Button type="primary" htmlType="submit">
             提交
           </Button>
-        </Form.Item>
+        </FormItem>
       </Form>
     );
   }

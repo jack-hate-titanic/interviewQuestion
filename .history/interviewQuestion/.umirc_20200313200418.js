@@ -28,10 +28,6 @@ export default {
       pathRewrite: { '^/api': '' },
       changeOrigin: true,
     },
-    '/public/uploads/*': {
-      target: 'http://localhost:7001/',
-      changeOrigin: true,
-    },
   },
   plugins: [
     // ref: https://umijs.org/plugin/umi-plugin-react.html

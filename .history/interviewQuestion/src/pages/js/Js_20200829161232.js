@@ -245,14 +245,7 @@ export default class Js extends PureComponent {
             </div>
           )}
         </Card>
-        <Modal
-          visible={visible}
-          title="创建试题"
-          destroyOnClose={true}
-          width={1000}
-          footer={false}
-          onCancel={this.onCancel}
-        >
+        <Modal visible={visible} title="创建试题" destroyOnClose={true} width={1000} footer={false}>
           <AddInterviewQuestion
             onCancel={this.onCancel}
             operationType={operationType}

@@ -22,7 +22,7 @@ export async function updateJsQuestion(params) {
 }
 
 export async function uploadFile(params) {
-  return apiFileUpload(`/file`, params);
+  return apiFileUpload();
 }
 // 马克思试题部分
 

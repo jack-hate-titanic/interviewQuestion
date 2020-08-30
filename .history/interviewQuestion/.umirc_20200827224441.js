@@ -28,7 +28,7 @@ export default {
       pathRewrite: { '^/api': '' },
       changeOrigin: true,
     },
-    '/public/uploads/*': {
+    '//public/uploads/*': {
       target: 'http://localhost:7001/',
       changeOrigin: true,
     },

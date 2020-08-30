@@ -113,8 +113,8 @@ class AddInterviewQuestion extends PureComponent {
         <Form.Item>
           <Editor onChange={this.onChange} editorState={editorState} />
         </Form.Item>
-        <Form.Item label={<span></span>} colon={false} style={{ textAlign: 'right' }}>
-          <Button style={{ marginRight: 24 }} onClick={onCancel}>
+        <Form.Item label={<span></span>} colon={false}>
+          <Button className="normalMarginRight" onClick={onCancel}>
             取消
           </Button>
           <Button type="primary" htmlType="submit">

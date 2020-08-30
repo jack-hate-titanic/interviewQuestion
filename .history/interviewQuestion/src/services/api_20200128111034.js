@@ -21,9 +21,6 @@ export async function updateJsQuestion(params) {
   return apiPUT(`js`, params);
 }
 
-export async function uploadFile(params) {
-  return apiFileUpload(`/file`, params);
-}
 // 马克思试题部分
 
 // 英语试题部分

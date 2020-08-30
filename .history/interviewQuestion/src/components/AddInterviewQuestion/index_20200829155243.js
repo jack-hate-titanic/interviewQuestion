@@ -1,9 +1,8 @@
 import React, { PureComponent } from 'react';
-import { Form, Modal, Input, message, Button } from 'antd';
+import { Form, Modal, Input, message } from 'antd';
 import * as api from '@/services/api';
 import PropTypes from 'prop-types';
 import BraftEditor from 'braft-editor';
-import { ContentUtils } from 'braft-utils';
 import Editor from '@/components/Editor';
 import _ from 'lodash';
 
@@ -13,14 +12,10 @@ const { TextArea } = Input;
 class AddInterviewQuestion extends PureComponent {
   constructor(props) {
     super(props);
-    console.log(props.operationType);
-    const editorState =
-      props.operationType === 'update'
-        ? BraftEditor.createEditorState(_.get(props, 'questionDetail.analysis', null))
-        : BraftEditor.createEditorState(null);
+    debugger;
     this.state = {
       visible: false,
-      editorState,
+      editorState: BraftEditor.createEditorState(_.get(props, 'questionDetail.analysis', null)),
     };
   }
 
@@ -40,13 +35,14 @@ class AddInterviewQuestion extends PureComponent {
     }
   }
 
-  // componentDidMount() {
-  //   if (this.state.editorState.isEmpty()) {
-  //     this.setState({
-  //       editorState: ContentUtils.clear(this.state.editorState),
-  //     });
-  //   }
-  // }
+  componentDidMount() {
+    if (this.state.editorState.isEmpty()) {
+      this.setState({
+        editorState: ContentUtils.clear(this.state.editorState)
+    })
+  }
+    }
+  }
 
   onCreate = e => {
     const { operationType, getData, onCancel, questionDetail } = this.props;
@@ -98,30 +94,33 @@ class AddInterviewQuestion extends PureComponent {
     const { onCancel, questionDetail, operationType } = this.props;
 
     return (
-      <Form className="login-form" onSubmit={this.onCreate}>
-        <Form.Item>
-          {getFieldDecorator('title', {
-            initialValue: operationType === 'add' ? '' : questionDetail.title,
-            rules: [
-              {
-                required: true,
-                message: '请输入试题名称!',
-              },
-            ],
-          })(<Input placeholder="请输入试题名称" />)}
-        </Form.Item>
-        <Form.Item>
-          <Editor onChange={this.onChange} editorState={editorState} />
-        </Form.Item>
-        <Form.Item label={<span></span>} colon={false} style={{ textAlign: 'right' }}>
-          <Button style={{ marginRight: 24 }} onClick={onCancel}>
-            取消
-          </Button>
-          <Button type="primary" htmlType="submit">
-            提交
-          </Button>
-        </Form.Item>
-      </Form>
+      <Modal
+        visible={visible}
+        title="创建试题"
+        okText="提交"
+        onCancel={onCancel}
+        onOk={this.onCreate}
+        cancelText="取消"
+        destroyOnClose={true}
+        width={1000}
+      >
+        <Form className="login-form">
+          <Form.Item>
+            {getFieldDecorator('title', {
+              initialValue: operationType === 'add' ? '' : questionDetail.title,
+              rules: [
+                {
+                  required: true,
+                  message: '请输入试题名称!',
+                },
+              ],
+            })(<Input placeholder="请输入试题名称" />)}
+          </Form.Item>
+          <Form.Item>
+            <Editor onChange={this.onChange} editorState={editorState} />
+          </Form.Item>
+        </Form>
+      </Modal>
     );
   }
 }
