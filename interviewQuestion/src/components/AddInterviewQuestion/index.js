@@ -59,7 +59,6 @@ class AddInterviewQuestion extends PureComponent {
           api
             .createJsQuestion({ ...values, analysis: html })
             .then(() => {
-              message.success('添加成功');
               onCancel();
             })
             .catch(() => {
@@ -70,9 +69,8 @@ class AddInterviewQuestion extends PureComponent {
             });
         } else {
           api
-            .updateJsQuestion({ ...values, id: questionDetail._id, analysis: html })
-            .then(() => {
-              message.success('修改成功');
+            .updateJsQuestion({ ...values, id: questionDetail.id, analysis: html })
+            .then(response => {
               onCancel();
             })
             .catch(() => {

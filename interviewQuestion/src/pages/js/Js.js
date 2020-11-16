@@ -74,14 +74,13 @@ export default class Js extends PureComponent {
 
   deleteQuestion = () => {
     const { num, questions } = this.state;
-    const deleteId = _.get(questions, `[${num}]._id`);
+    const deleteId = _.get(questions, `[${num}].id`);
     api
       .destroyJsQuestion({
         id: deleteId,
       })
       .then(() => {
-        message.success('删除成功');
-        const newQuestions = questions.filter(question => question._id !== deleteId);
+        const newQuestions = questions.filter(question => question.id !== deleteId);
         this.setState(
           {
             questions: newQuestions,
@@ -240,7 +239,7 @@ export default class Js extends PureComponent {
                 bordered={true}
                 size="small"
                 pagination={false}
-                rowKey="_id"
+                rowKey="id"
               />
             </div>
           )}
@@ -257,7 +256,7 @@ export default class Js extends PureComponent {
             onCancel={this.onCancel}
             operationType={operationType}
             getData={this.getData}
-            key={_.get(questions, `[${num}]._id`, {})}
+            key={_.get(questions, `[${num}].id`, {})}
             questionDetail={_.get(questions, `[${num}]`, {})}
           />
         </Modal>
