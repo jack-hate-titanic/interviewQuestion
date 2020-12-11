@@ -12,10 +12,6 @@ export default {
       component: '../layouts/index',
       routes: [
         {
-          path: '/react',
-          component: './react/React',
-        },
-        {
           path: '/',
           component: '../pages/js/Js',
         },
@@ -24,12 +20,12 @@ export default {
   ],
   proxy: {
     '/api/*': {
-      target: 'http://localhost:7001/api',
+      target: 'http://139.224.54.46:7001/api',
       pathRewrite: { '^/api': '' },
       changeOrigin: true,
     },
     '/public/uploads/*': {
-      target: 'http://localhost:7001/',
+      target: 'http://139.224.54.46:7001/',
       changeOrigin: true,
     },
   },

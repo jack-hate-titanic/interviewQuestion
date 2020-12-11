@@ -1,60 +1,25 @@
-import React, { PureComponent } from 'react';
-import { Form, Modal, Input, message, Button } from 'antd';
+import React, { useState } from 'react';
+import { Form, Input, Button } from 'antd';
 import * as api from '@/services/api';
-import PropTypes from 'prop-types';
 import BraftEditor from 'braft-editor';
-import { ContentUtils } from 'braft-utils';
 import Editor from '@/components/Editor';
 import _ from 'lodash';
 
-const { TextArea } = Input;
+const AddInterviewQuestion = props => {
+  const { getFieldDecorator } = props.form;
+  const { onCancel, questionDetail, operationType } = props;
+  const editorState =
+    props.operationType === 'update'
+      ? BraftEditor.createEditorState(_.get(props, 'questionDetail.analysis', null))
+      : BraftEditor.createEditorState(null);
+  const [editor, setEditor] = useState(editorState);
 
-@Form.create()
-class AddInterviewQuestion extends PureComponent {
-  constructor(props) {
-    super(props);
-    console.log(props.operationType);
-    const editorState =
-      props.operationType === 'update'
-        ? BraftEditor.createEditorState(_.get(props, 'questionDetail.analysis', null))
-        : BraftEditor.createEditorState(null);
-    this.state = {
-      visible: false,
-      editorState,
-    };
-  }
-
-  static propTypes = {
-    visible: PropTypes.bool,
-    onCancel: PropTypes.func,
-    operationType: PropTypes.string,
-    questionDetail: PropTypes.object,
-    getData: PropTypes.func,
-  };
-
-  componentWillReceiveProps(nextProps, nextContext) {
-    if (this.props.visible !== nextProps.visible) {
-      this.setState({
-        visible: nextProps.visible,
-      });
-    }
-  }
-
-  // componentDidMount() {
-  //   if (this.state.editorState.isEmpty()) {
-  //     this.setState({
-  //       editorState: ContentUtils.clear(this.state.editorState),
-  //     });
-  //   }
-  // }
-
-  onCreate = e => {
-    const { operationType, getData, onCancel, questionDetail } = this.props;
-    const { editorState } = this.state;
+  const onCreate = e => {
+    const { operationType, getData, onCancel, questionDetail } = props;
     e.preventDefault();
-    this.props.form.validateFields((err, values) => {
+    props.form.validateFields((err, values) => {
       if (!err) {
-        const html = editorState.toHTML();
+        const html = editor.toHTML();
         if (operationType === 'add') {
           api
             .createJsQuestion({ ...values, analysis: html })
@@ -84,44 +49,36 @@ class AddInterviewQuestion extends PureComponent {
     });
   };
 
-  onChange = editorState => {
-    this.setState({
-      editorState,
-    });
+  const onChange = editorState => {
+    setEditor(editorState);
   };
 
-  render() {
-    const { getFieldDecorator } = this.props.form;
-    const { visible, editorState } = this.state;
-    const { onCancel, questionDetail, operationType } = this.props;
+  return (
+    <Form className="login-form" onSubmit={onCreate}>
+      <Form.Item>
+        {getFieldDecorator('title', {
+          initialValue: operationType === 'add' ? '' : questionDetail.title,
+          rules: [
+            {
+              required: true,
+              message: '请输入试题名称!',
+            },
+          ],
+        })(<Input placeholder="请输入试题名称" />)}
+      </Form.Item>
+      <Form.Item>
+        <Editor onChange={onChange} editorState={editor} />
+      </Form.Item>
+      <Form.Item label={<span></span>} colon={false} style={{ textAlign: 'right' }}>
+        <Button style={{ marginRight: 24 }} onClick={onCancel}>
+          取消
+        </Button>
+        <Button type="primary" htmlType="submit">
+          提交
+        </Button>
+      </Form.Item>
+    </Form>
+  );
+};
 
-    return (
-      <Form className="login-form" onSubmit={this.onCreate}>
-        <Form.Item>
-          {getFieldDecorator('title', {
-            initialValue: operationType === 'add' ? '' : questionDetail.title,
-            rules: [
-              {
-                required: true,
-                message: '请输入试题名称!',
-              },
-            ],
-          })(<Input placeholder="请输入试题名称" />)}
-        </Form.Item>
-        <Form.Item>
-          <Editor onChange={this.onChange} editorState={editorState} />
-        </Form.Item>
-        <Form.Item label={<span></span>} colon={false} style={{ textAlign: 'right' }}>
-          <Button style={{ marginRight: 24 }} onClick={onCancel}>
-            取消
-          </Button>
-          <Button type="primary" htmlType="submit">
-            提交
-          </Button>
-        </Form.Item>
-      </Form>
-    );
-  }
-}
-
-export default AddInterviewQuestion;
+export default Form.create()(AddInterviewQuestion);

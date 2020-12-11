@@ -1,13 +1,8 @@
 import './index.less';
-import { Layout, Menu, Icon } from 'antd';
+import { Layout } from 'antd';
 import { PureComponent } from 'react';
-import Link from 'umi/link';
 
-const { Content, Footer, Sider } = Layout;
-
-const IconFont = Icon.createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/font_1609279_lh5ku4i54t.js',
-});
+const { Content, Footer } = Layout;
 
 class BasicLayout extends PureComponent {
   state = {
@@ -23,7 +18,7 @@ class BasicLayout extends PureComponent {
   render() {
     return (
       <Layout style={{ minHeight: '100vh' }}>
-        <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
+        {/* <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
           <div className="logo" />
           <Menu theme="dark" defaultSelectedKeys={['js']} mode="inline">
             <Menu.Item key="js">
@@ -39,10 +34,18 @@ class BasicLayout extends PureComponent {
               </Link>
             </Menu.Item>
           </Menu>
-        </Sider>
+        </Sider> */}
         <Layout className="components-layout-demo-custom-trigger">
           <Content>{this.props.children}</Content>
-          <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+          <Footer style={{ textAlign: 'center' }}>
+            <a
+              href="https://beian.miit.gov.cn"
+              target="_blank"
+              style={{ color: '#bbb', fontSize: 12 }}
+            >
+              京ICP备 2020044007号-1
+            </a>
+          </Footer>
         </Layout>
       </Layout>
     );

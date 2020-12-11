@@ -1,266 +1,215 @@
-import React, { PureComponent } from 'react';
-import { Button, Card, message, PageHeader, Icon, Tooltip, Popconfirm, Table, Modal } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Button, Card, PageHeader, Icon, Tooltip, Popconfirm, Table, Modal } from 'antd';
 import AddInterviewQuestion from '@/components/AddInterviewQuestion';
 import * as api from '../../services/api';
 import NoMoreQuestion from '@/components/NoMoreQuestion';
-import _ from 'lodash';
+import { get } from 'lodash';
 
-export default class Js extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      visible: false,
-      questions: [],
-      num: 0,
-      operationType: 'add',
-      reviewType: 'single',
-      answerVisible: false,
-    };
-    this.columns = [
-      {
-        title: '序号',
-        dataIndex: 'num',
-        key: 'num',
-        width: '15%',
-        render: (text, record, index) => {
-          return index + 1;
-        },
+const Js = () => {
+  const [visible, setVisible] = useState(false);
+  const [questions, setQuestion] = useState([]);
+  const [num, setNum] = useState(0);
+  const [operationType, setOperationType] = useState('add');
+  const [reviewType, setReviewType] = useState('single');
+  const [answerVisible, setAnswerVisible] = useState(false);
+  const columns = [
+    {
+      title: '序号',
+      dataIndex: 'num',
+      key: 'num',
+      width: '15%',
+      render: (text, record, index) => {
+        return index + 1;
       },
-      {
-        title: '试题名称',
-        dataIndex: 'title',
-        key: 'title',
-        render: (text, record, index) => {
-          return (
-            <a
-              href="javascript:;"
-              onClick={() => {
-                this.onQuestionDetail(index);
-              }}
-            >
-              {text}
-            </a>
-          );
-        },
+    },
+    {
+      title: '试题名称',
+      dataIndex: 'title',
+      key: 'title',
+      render: (text, record, index) => {
+        return (
+          <a
+            onClick={() => {
+              setReviewType('single');
+              setNum(index);
+            }}
+          >
+            {text}
+          </a>
+        );
       },
-    ];
-  }
+    },
+  ];
 
-  componentDidMount() {
-    this.getData();
-  }
+  useEffect(() => {
+    getData();
+  }, []);
 
-  onQuestionDetail = num => {
-    this.setState({
-      reviewType: 'single',
-      num: num,
-    });
-  };
-
-  getData = () => {
+  const getData = () => {
     api.getJsQuestion().then(response => {
-      this.setState({
-        questions: response,
-      });
+      setQuestion(response);
     });
   };
 
-  addQuestion = () => {
-    this.setState({
-      visible: true,
-      operationType: 'add',
-    });
-  };
-
-  deleteQuestion = () => {
-    const { num, questions } = this.state;
-    const deleteId = _.get(questions, `[${num}].id`);
+  const deleteQuestion = () => {
+    const deleteId = get(questions, `[${num}].id`);
     api
       .destroyJsQuestion({
         id: deleteId,
       })
-      .then(() => {
+      .then(async () => {
         const newQuestions = questions.filter(question => question.id !== deleteId);
-        this.setState(
-          {
-            questions: newQuestions,
-          },
-          () => {
-            if (num > 0) {
-              this.setState({
-                num: num - 1,
-              });
-            } else {
-              this.setState({
-                num: num,
-              });
-            }
-          },
-        );
+        await setQuestion(newQuestions);
+        if (num > 0) {
+          setNum(num - 1);
+        } else {
+          setNum(num);
+        }
       });
   };
 
-  onReviewQuestionType = () => {
-    const { reviewType } = this.state;
-    this.setState({
-      reviewType: reviewType === 'all' ? 'single' : 'all',
-    });
-  };
-
-  updateQuestion = () => {
-    this.setState({
-      visible: true,
-      operationType: 'update',
-    });
-  };
-
-  onCancel = () => {
-    this.setState({
-      visible: false,
-    });
-  };
-
-  toNumOne = () => {
-    this.setState({
-      num: 0,
-    });
-  };
-
-  onChangeAnswerVisible = () => {
-    const { answerVisible } = this.state;
-    this.setState({
-      answerVisible: !answerVisible,
-    });
-  };
-
-  render() {
-    const { visible, questions, num, operationType, reviewType, answerVisible } = this.state;
-    return (
-      <div>
-        <PageHeader
-          style={{
-            border: '1px solid rgb(235, 237, 240)',
-            background: 'white',
-          }}
-          title={
-            <div>
-              汉语言文学试题
-              <Button type="primary" style={{ marginLeft: 24 }} onClick={this.onReviewQuestionType}>
-                {reviewType === 'all' ? '单个试题' : '试题总览'}
-              </Button>
-            </div>
-          }
-          extra={
-            <Button type="primary" onClick={this.addQuestion}>
-              添加试题
+  return (
+    <div>
+      <PageHeader
+        style={{
+          border: '1px solid rgb(235, 237, 240)',
+          background: 'white',
+        }}
+        title={
+          <div>
+            前端面试题
+            <Button
+              type="primary"
+              style={{ marginLeft: 24 }}
+              onClick={() => setReviewType(reviewType === 'all' ? 'single' : 'all')}
+            >
+              {reviewType === 'all' ? '单个试题' : '试题总览'}
             </Button>
-          }
-        />
+          </div>
+        }
+        extra={
+          <Button
+            type="primary"
+            onClick={() => {
+              setVisible(true);
+              setOperationType('add');
+            }}
+          >
+            添加试题
+          </Button>
+        }
+      />
 
-        <Card style={{ margin: 12, overflow: 'hidden' }}>
-          {reviewType === 'single' ? (
-            <div>
-              {questions[num] ? (
-                <div>
+      <Card style={{ margin: 12, overflow: 'hidden' }}>
+        {reviewType === 'single' ? (
+          <div>
+            {questions[num] ? (
+              <div>
+                <p>
+                  <span>{num + 1}.</span>
+                  {questions[num].title}
+                </p>
+                {answerVisible ? (
                   <p>
-                    <span>{num + 1}.</span>
-                    {questions[num].title}
+                    解析：
+                    <div dangerouslySetInnerHTML={{ __html: questions[num].analysis }} />
                   </p>
-                  {answerVisible ? (
-                    <p>
-                      解析：
-                      <div dangerouslySetInnerHTML={{ __html: questions[num].analysis }} />
-                    </p>
-                  ) : null}
+                ) : null}
 
-                  <div style={{ float: 'right' }}>
-                    <Button
-                      type="primary"
-                      onClick={this.onChangeAnswerVisible}
-                      style={{ marginRight: 24 }}
-                    >
-                      显示
-                    </Button>
-                    {num > 0 ? (
-                      <Tooltip title="上一题">
-                        <Button
-                          type="primary"
-                          className="rightComponentDistance"
-                          onClick={() => {
-                            this.setState({ num: num - 1, answerVisible: false });
-                          }}
-                        >
-                          <Icon type="left" />
-                        </Button>
-                      </Tooltip>
-                    ) : null}
-                    <Popconfirm
-                      title={'确定删除么?'}
-                      okText={'确定'}
-                      cancelText={'取消'}
-                      onConfirm={this.deleteQuestion}
-                    >
-                      <Tooltip title="删除">
-                        <Button className="rightComponentDistance" type="danger">
-                          <Icon type="delete" />
-                        </Button>
-                      </Tooltip>
-                    </Popconfirm>
-                    <Tooltip title="编辑">
+                <div style={{ float: 'right' }}>
+                  <Button
+                    type="primary"
+                    onClick={() => setAnswerVisible(!answerVisible)}
+                    style={{ marginRight: 24 }}
+                  >
+                    {answerVisible ? '隐藏' : '显示'}
+                  </Button>
+                  {num > 0 ? (
+                    <Tooltip title="上一题">
                       <Button
-                        onClick={this.updateQuestion}
+                        type="primary"
                         className="rightComponentDistance"
-                        type="primary"
-                      >
-                        <Icon type="edit" />
-                      </Button>
-                    </Tooltip>
-                    <Tooltip title="下一题">
-                      <Button
-                        type="primary"
                         onClick={() => {
-                          this.setState({ num: num + 1, answerVisible: false });
+                          setNum(num - 1);
+                          setAnswerVisible(false);
                         }}
                       >
-                        <Icon type="right" />
+                        <Icon type="left" />
                       </Button>
                     </Tooltip>
-                  </div>
+                  ) : null}
+                  <Popconfirm
+                    title={'确定删除么?'}
+                    okText={'确定'}
+                    cancelText={'取消'}
+                    onConfirm={deleteQuestion}
+                  >
+                    <Tooltip title="删除">
+                      <Button className="rightComponentDistance" type="danger">
+                        <Icon type="delete" />
+                      </Button>
+                    </Tooltip>
+                  </Popconfirm>
+                  <Tooltip title="编辑">
+                    <Button
+                      onClick={() => {
+                        setVisible(true);
+                        setOperationType('update');
+                      }}
+                      className="rightComponentDistance"
+                      type="primary"
+                    >
+                      <Icon type="edit" />
+                    </Button>
+                  </Tooltip>
+                  <Tooltip title="下一题">
+                    <Button
+                      type="primary"
+                      onClick={() => {
+                        setNum(num + 1);
+                        setAnswerVisible(false);
+                      }}
+                    >
+                      <Icon type="right" />
+                    </Button>
+                  </Tooltip>
                 </div>
-              ) : (
-                <NoMoreQuestion toNumOne={this.toNumOne} />
-              )}
-            </div>
-          ) : (
-            <div>
-              <Table
-                dataSource={questions}
-                columns={this.columns}
-                bordered={true}
-                size="small"
-                pagination={false}
-                rowKey="id"
-              />
-            </div>
-          )}
-        </Card>
-        <Modal
-          visible={visible}
-          title="创建试题"
-          destroyOnClose={true}
-          width={1000}
-          footer={false}
-          onCancel={this.onCancel}
-        >
-          <AddInterviewQuestion
-            onCancel={this.onCancel}
-            operationType={operationType}
-            getData={this.getData}
-            key={_.get(questions, `[${num}].id`, {})}
-            questionDetail={_.get(questions, `[${num}]`, {})}
-          />
-        </Modal>
-      </div>
-    );
-  }
-}
+              </div>
+            ) : (
+              <NoMoreQuestion toNumOne={() => setNum(0)} />
+            )}
+          </div>
+        ) : (
+          <div>
+            <Table
+              dataSource={questions}
+              columns={columns}
+              bordered={true}
+              size="small"
+              pagination={false}
+              rowKey="id"
+            />
+          </div>
+        )}
+      </Card>
+      <Modal
+        visible={visible}
+        title="创建试题"
+        destroyOnClose={true}
+        width={1000}
+        footer={false}
+        onCancel={() => setVisible(false)}
+      >
+        <AddInterviewQuestion
+          onCancel={() => setVisible(false)}
+          operationType={operationType}
+          getData={getData}
+          key={get(questions, `[${num}].id`, {})}
+          questionDetail={get(questions, `[${num}]`, {})}
+        />
+      </Modal>
+    </div>
+  );
+};
+
+export default Js;
