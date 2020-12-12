@@ -6,6 +6,7 @@ import Editor from '@/components/Editor';
 import _ from 'lodash';
 
 const AddInterviewQuestion = props => {
+  console.log('---------------', 2222);
   const { getFieldDecorator } = props.form;
   const { onCancel, questionDetail, operationType } = props;
   const editorState =

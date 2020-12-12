@@ -4,7 +4,7 @@ import BraftEditor from 'braft-editor';
 import { ContentUtils } from 'braft-utils';
 import * as api from '@/services/api';
 
-import { Upload, Icon, Card, Button } from 'antd';
+import { Upload, Icon } from 'antd';
 import _ from 'lodash';
 
 export default class Editor extends React.Component {
