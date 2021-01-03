@@ -17,3 +17,5 @@
 # umi
 .umi
 .umi-production
+# 隐藏一下服务器地址
+/.umirc.js
