@@ -5,6 +5,7 @@ import * as api from '../../services/api';
 import NoMoreQuestion from '@/components/NoMoreQuestion';
 import AddClass from '@/components/AddClass';
 import { get } from 'lodash';
+import styles from './index.less';
 
 const Js = () => {
   const [visible, setVisible] = useState(false);
@@ -48,7 +49,7 @@ const Js = () => {
 
   const getData = () => {
     api.getJsQuestion().then(response => {
-      setQuestion(response);
+      setQuestion(response.rows);
     });
   };
 
@@ -79,13 +80,6 @@ const Js = () => {
         title={
           <div>
             前端面试题
-            <Button
-              type="primary"
-              style={{ marginLeft: 24 }}
-              onClick={() => setReviewType(reviewType === 'all' ? 'single' : 'all')}
-            >
-              {reviewType === 'all' ? '单个试题' : '试题总览'}
-            </Button>
             <AddClass />
           </div>
         }

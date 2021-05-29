@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Button, Modal, Input } from 'antd';
+import { Button, Modal, Input, Select } from 'antd';
 import { getClasses, createClass } from '@/services/api';
-
+import styles from './index.less';
+import { isObjectLike } from 'lodash';
+import { getJsQuestion } from '../../services/api';
+const { Option } = Select;
 const AddClass = () => {
   const [isShowModal, setIsShowModal] = useState(false);
   const [className, setClassName] = useState('');
@@ -25,22 +28,33 @@ const AddClass = () => {
     });
   };
 
+  const onSelectClass = value => {
+    const params = {
+      classId: value,
+    };
+    getJsQuestion(params).then(response => console.log(response));
+  };
+
   return (
-    <div>
-      {classList.map(item => {
-        return (
-          <Button type="primary" key={item.name}>
-            {item.name}
-          </Button>
-        );
-      })}
+    <div className={styles.container}>
+      <Select className={styles.select} defaultValue="all" onSelect={value => onSelectClass(value)}>
+        <Option value="all" key="all">
+          全部
+        </Option>
+        {classList.map(item => {
+          return (
+            <Option value={item.id} key={item.name}>
+              {item.name}
+            </Option>
+          );
+        })}
+      </Select>
 
       <Button
         type="primary"
-        shape="circle"
         icon="plus"
         onClick={() => setIsShowModal(true)}
-        className="leftDistance"
+        className="leftComponentDistance"
       />
       <Modal
         visible={isShowModal}

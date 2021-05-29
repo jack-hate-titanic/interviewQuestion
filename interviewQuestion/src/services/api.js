@@ -2,7 +2,7 @@ import { apiGET, apiPOST, apiPUT, apiDELETE, apiFileUpload } from './api_util';
 
 // js试题部分
 export async function getJsQuestion(params) {
-  return apiGET(`/js`);
+  return apiGET(`/js`, params);
 }
 
 export async function createJsQuestion(params) {
