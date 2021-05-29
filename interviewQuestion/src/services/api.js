@@ -21,9 +21,30 @@ export async function updateJsQuestion(params) {
   return apiPUT(`js`, params);
 }
 
+// 上传图片
+
 export async function uploadFile(params) {
   return apiFileUpload(`/file`, params);
 }
-// 马克思试题部分
 
-// 英语试题部分
+// 类别
+
+export async function getClasses() {
+  return apiGET(`/class`);
+}
+
+export async function createClass(params) {
+  return apiPOST(`class`, params);
+}
+
+export async function destroyClass(params) {
+  return apiDELETE(`class/${params.id}`);
+}
+
+export async function showClass(params) {
+  return apiGET(`class/${params.id}`);
+}
+
+export async function updateClass(params) {
+  return apiPUT(`class`, params);
+}

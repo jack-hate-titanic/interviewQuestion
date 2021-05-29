@@ -3,6 +3,7 @@ import { Button, Card, PageHeader, Icon, Tooltip, Popconfirm, Table, Modal } fro
 import AddInterviewQuestion from '@/components/AddInterviewQuestion';
 import * as api from '../../services/api';
 import NoMoreQuestion from '@/components/NoMoreQuestion';
+import AddClass from '@/components/AddClass';
 import { get } from 'lodash';
 
 const Js = () => {
@@ -85,6 +86,7 @@ const Js = () => {
             >
               {reviewType === 'all' ? '单个试题' : '试题总览'}
             </Button>
+            <AddClass />
           </div>
         }
         extra={
