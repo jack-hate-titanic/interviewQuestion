@@ -12,8 +12,11 @@ const Js = () => {
   const [questions, setQuestion] = useState([]);
   const [num, setNum] = useState(0);
   const [operationType, setOperationType] = useState('add');
-  const [reviewType, setReviewType] = useState('single');
+  const [reviewType, setReviewType] = useState('more');
   const [answerVisible, setAnswerVisible] = useState(false);
+  const [questionCount, setQuestionCount] = useState();
+  const [fetchParams, setFetchParams] = useState({});
+
   const columns = [
     {
       title: '序号',
@@ -47,9 +50,14 @@ const Js = () => {
     getData();
   }, []);
 
+  useEffect(() => {
+    getData(fetchParams);
+  }, [fetchParams]);
+
   const getData = () => {
-    api.getJsQuestion().then(response => {
-      setQuestion(response.rows);
+    api.getJsQuestion(fetchParams).then(response => {
+      setQuestion(response?.rows);
+      setQuestionCount(response?.count);
     });
   };
 
@@ -80,7 +88,10 @@ const Js = () => {
         title={
           <div>
             前端面试题
-            <AddClass />
+            <AddClass
+              setFetchParams={params => setFetchParams({ ...fetchParams, ...params })}
+              setReviewType={setReviewType}
+            />
           </div>
         }
         extra={
@@ -97,6 +108,9 @@ const Js = () => {
       />
 
       <Card style={{ margin: 12, overflow: 'hidden' }}>
+        <div className="bottomDistance">
+          本类别一共有试题<span className={styles.questionCount}>{questionCount}</span>道
+        </div>
         {reviewType === 'single' ? (
           <div>
             {questions[num] ? (

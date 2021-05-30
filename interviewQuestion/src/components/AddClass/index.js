@@ -5,7 +5,7 @@ import styles from './index.less';
 import { isObjectLike } from 'lodash';
 import { getJsQuestion } from '../../services/api';
 const { Option } = Select;
-const AddClass = () => {
+const AddClass = props => {
   const [isShowModal, setIsShowModal] = useState(false);
   const [className, setClassName] = useState('');
   const [classList, setClassList] = useState([]);
@@ -25,14 +25,17 @@ const AddClass = () => {
       name: className,
     }).finally(() => {
       setIsShowModal(false);
+      getClass();
     });
   };
 
   const onSelectClass = value => {
+    const { setFetchParams, setReviewType } = props;
     const params = {
-      classId: value,
+      classId: value === 'all' ? undefined : value,
     };
-    getJsQuestion(params).then(response => console.log(response));
+    setReviewType('more');
+    setFetchParams(params);
   };
 
   return (
