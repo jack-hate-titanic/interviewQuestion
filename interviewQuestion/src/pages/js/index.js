@@ -130,7 +130,7 @@ const Js = () => {
                   <Button
                     type="primary"
                     onClick={() => setAnswerVisible(!answerVisible)}
-                    style={{ marginRight: 24 }}
+                    className={styles.showDetailBtn}
                   >
                     {answerVisible ? '隐藏' : '显示'}
                   </Button>

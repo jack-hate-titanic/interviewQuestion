@@ -13,4 +13,8 @@ npm start
 - 总结一下umi优化
 - 首屏渲染如何优化
 - 添加类别删除
-— 把class放到redux中
+- 把class放到redux中
+- 需要角色管理，添加token
+- 添加shell脚本
+- 添加http2
+- 添加缓存
