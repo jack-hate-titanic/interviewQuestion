@@ -87,7 +87,7 @@ const Js = () => {
         }}
         title={
           <div>
-            前端面试题
+            <span className={styles.title}>前端面试题</span>
             <AddClass
               setFetchParams={params => setFetchParams({ ...fetchParams, ...params })}
               setReviewType={setReviewType}

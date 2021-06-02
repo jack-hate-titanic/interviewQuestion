@@ -85,7 +85,7 @@ const AddInterviewQuestion = props => {
         <Col span={8}>
           <Form.Item>
             {getFieldDecorator('classId', {
-              initialValue: operationType === 'add' ? undefined : questionDetail.className,
+              initialValue: operationType === 'add' ? undefined : questionDetail.classId,
               rules: [
                 {
                   required: true,
