@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 import { Button, Modal, Input, Select } from 'antd';
 import { getClasses, createClass } from '@/services/api';
 import styles from './index.less';
-import { isObjectLike } from 'lodash';
-import { getJsQuestion } from '../../services/api';
 const { Option } = Select;
 const AddClass = props => {
   const [isShowModal, setIsShowModal] = useState(false);
