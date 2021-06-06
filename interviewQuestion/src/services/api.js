@@ -1,24 +1,24 @@
 import { apiGET, apiPOST, apiPUT, apiDELETE, apiFileUpload } from './api_util';
 
 // js试题部分
-export async function getJsQuestion(params) {
-  return apiGET(`/js`, params);
+export async function getQuestion(params) {
+  return apiGET(`/question`, params);
 }
 
-export async function createJsQuestion(params) {
-  return apiPOST(`js`, params);
+export async function createQuestion(params) {
+  return apiPOST(`question`, params);
 }
 
-export async function destroyJsQuestion(params) {
-  return apiDELETE(`js/${params.id}`);
+export async function destroyQuestion(params) {
+  return apiDELETE(`question/${params.id}`);
 }
 
-export async function showJsQuestion(params) {
-  return apiGET(`js/${params.id}`);
+export async function showQuestion(params) {
+  return apiGET(`question/${params.id}`);
 }
 
-export async function updateJsQuestion(params) {
-  return apiPUT(`js`, params);
+export async function updateQuestion(params) {
+  return apiPUT(`question`, params);
 }
 
 // 上传图片
@@ -29,22 +29,22 @@ export async function uploadFile(params) {
 
 // 类别
 
-export async function getClasses() {
-  return apiGET(`/class`);
+export async function getCategory() {
+  return apiGET(`/category`);
 }
 
-export async function createClass(params) {
-  return apiPOST(`class`, params);
+export async function createCategory(params) {
+  return apiPOST(`category`, params);
 }
 
-export async function destroyClass(params) {
-  return apiDELETE(`class/${params.id}`);
+export async function destroyCategory(params) {
+  return apiDELETE(`category/${params.id}`);
 }
 
-export async function showClass(params) {
-  return apiGET(`class/${params.id}`);
+export async function showCategory(params) {
+  return apiGET(`category/${params.id}`);
 }
 
-export async function updateClass(params) {
-  return apiPUT(`class`, params);
+export async function updateCategory(params) {
+  return apiPUT(`category`, params);
 }

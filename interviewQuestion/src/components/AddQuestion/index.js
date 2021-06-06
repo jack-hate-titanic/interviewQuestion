@@ -3,22 +3,22 @@ import { Form, Input, Button, Select, Row, Col } from 'antd';
 import * as api from '@/services/api';
 import BraftEditor from 'braft-editor';
 import Editor from '@/components/Editor';
-import _ from 'lodash';
 
 const { Option } = Select;
 
-const AddInterviewQuestion = props => {
+const AddQuestion = props => {
   const { getFieldDecorator } = props.form;
   const { onCancel, questionDetail, operationType } = props;
+  console.log(questionDetail);
   const editorState =
     props.operationType === 'update'
-      ? BraftEditor.createEditorState(_.get(props, 'questionDetail.analysis', null))
+      ? BraftEditor.createEditorState(props.questionDetail && props.questionDetail.analysis)
       : BraftEditor.createEditorState(null);
   const [editor, setEditor] = useState(editorState);
-  const [classList, setClassList] = useState([]);
+  const [categoryList, setCategoryList] = useState([]);
 
   useEffect(() => {
-    getClass();
+    getCategory();
   }, []);
 
   const onCreate = e => {
@@ -29,7 +29,7 @@ const AddInterviewQuestion = props => {
         const html = editor.toHTML();
         if (operationType === 'add') {
           api
-            .createJsQuestion({ ...values, analysis: html })
+            .createQuestion({ ...values, analysis: html })
             .then(() => {
               onCancel();
             })
@@ -41,7 +41,7 @@ const AddInterviewQuestion = props => {
             });
         } else {
           api
-            .updateJsQuestion({ ...values, id: questionDetail.id, analysis: html })
+            .updateQuestion({ ...values, id: questionDetail.id, analysis: html })
             .then(response => {
               onCancel();
             })
@@ -60,9 +60,9 @@ const AddInterviewQuestion = props => {
     setEditor(editorState);
   };
 
-  const getClass = () => {
-    api.getClasses().then(response => {
-      setClassList(response);
+  const getCategory = () => {
+    api.getCategory().then(response => {
+      setCategoryList(response);
     });
   };
 
@@ -84,8 +84,8 @@ const AddInterviewQuestion = props => {
         </Col>
         <Col span={8}>
           <Form.Item>
-            {getFieldDecorator('classId', {
-              initialValue: operationType === 'add' ? undefined : questionDetail.classId,
+            {getFieldDecorator('categoryId', {
+              initialValue: operationType === 'add' ? undefined : questionDetail.categoryId,
               rules: [
                 {
                   required: true,
@@ -94,7 +94,7 @@ const AddInterviewQuestion = props => {
               ],
             })(
               <Select placeholder="请选择分类">
-                {classList.map(item => {
+                {categoryList.map(item => {
                   return (
                     <Option key={item.id} value={item.id}>
                       {item.name}
@@ -122,4 +122,4 @@ const AddInterviewQuestion = props => {
   );
 };
 
-export default Form.create()(AddInterviewQuestion);
+export default Form.create()(AddQuestion);

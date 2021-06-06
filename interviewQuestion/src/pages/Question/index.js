@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Card, PageHeader, Icon, Tooltip, Popconfirm, Table, Modal } from 'antd';
-import AddInterviewQuestion from '@/components/AddInterviewQuestion';
+import AddQuestion from '@/components/AddQuestion';
 import * as api from '../../services/api';
 import NoMoreQuestion from '@/components/NoMoreQuestion';
-import AddClass from '@/components/AddClass';
-import { get } from 'lodash';
+import AddCategory from '@/components/AddCategory';
+import { get } from '../../utils/utils.js';
 import styles from './index.less';
 
-const Js = () => {
+const Question = () => {
   const [visible, setVisible] = useState(false);
   const [questions, setQuestion] = useState([]);
   const [num, setNum] = useState(0);
@@ -55,7 +55,7 @@ const Js = () => {
   }, [fetchParams]);
 
   const getData = () => {
-    api.getJsQuestion(fetchParams).then(response => {
+    api.getQuestion(fetchParams).then(response => {
       setQuestion(response?.rows);
       setQuestionCount(response?.count);
     });
@@ -64,7 +64,7 @@ const Js = () => {
   const deleteQuestion = () => {
     const deleteId = get(questions, `[${num}].id`);
     api
-      .destroyJsQuestion({
+      .destroyQuestion({
         id: deleteId,
       })
       .then(async () => {
@@ -88,7 +88,7 @@ const Js = () => {
         title={
           <div>
             <span className={styles.title}>前端面试题</span>
-            <AddClass
+            <AddCategory
               setFetchParams={params => setFetchParams({ ...fetchParams, ...params })}
               setReviewType={setReviewType}
             />
@@ -210,16 +210,16 @@ const Js = () => {
         footer={false}
         onCancel={() => setVisible(false)}
       >
-        <AddInterviewQuestion
+        <AddQuestion
           onCancel={() => setVisible(false)}
           operationType={operationType}
           getData={getData}
-          key={get(questions, `[${num}].id`, {})}
-          questionDetail={get(questions, `[${num}]`, {})}
+          key={get(questions[num], 'id', {})}
+          questionDetail={questions[num]}
         />
       </Modal>
     </div>
   );
 };
 
-export default Js;
+export default Question;

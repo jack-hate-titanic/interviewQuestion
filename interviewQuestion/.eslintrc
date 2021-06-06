@@ -4,9 +4,18 @@
     // ...
     "react-hooks"
   ],
+  "parser": "babel-eslint",
   "rules": {
     // ...
     "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn"
+    "react-hooks/exhaustive-deps": "warn",
+    // 禁止出现未使用的变量
+    "no-unused-vars": [
+      "error",
+      {
+        "var": "all",
+        "args": "none"
+      }
+    ]
   }
 }

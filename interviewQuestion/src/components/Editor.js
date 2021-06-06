@@ -5,7 +5,6 @@ import { ContentUtils } from 'braft-utils';
 import * as api from '@/services/api';
 
 import { Upload, Icon } from 'antd';
-import _ from 'lodash';
 
 export default class Editor extends React.Component {
   constructor(props) {
@@ -29,7 +28,7 @@ export default class Editor extends React.Component {
       const imgContent = ContentUtils.insertMedias(this.props.editorState, [
         {
           type: 'IMAGE',
-          url: _.get(response, 'url'),
+          url: response && response.url,
         },
       ]);
       onChange && onChange(imgContent);

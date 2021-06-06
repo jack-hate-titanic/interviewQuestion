@@ -1,36 +1,36 @@
 import { useEffect, useState } from 'react';
 import { Button, Modal, Input, Select } from 'antd';
-import { getClasses, createClass } from '@/services/api';
+import { getCategory, createCategory } from '@/services/api';
 import styles from './index.less';
 const { Option } = Select;
-const AddClass = props => {
+const AddCategory = props => {
   const [isShowModal, setIsShowModal] = useState(false);
-  const [className, setClassName] = useState('');
-  const [classList, setClassList] = useState([]);
+  const [categoryName, setCategoryName] = useState('');
+  const [categoryList, setCategoryList] = useState([]);
 
   useEffect(() => {
-    getClass();
+    queryCategory();
   }, []);
 
-  const getClass = () => {
-    getClasses().then(response => {
-      setClassList(response);
+  const queryCategory = () => {
+    getCategory().then(response => {
+      setCategoryList(response);
     });
   };
 
-  const onSubmitClass = () => {
-    createClass({
-      name: className,
+  const onSubmitCategory = () => {
+    createCategory({
+      name: categoryName,
     }).finally(() => {
       setIsShowModal(false);
-      getClass();
+      queryCategory();
     });
   };
 
-  const onSelectClass = value => {
+  const onSelectCategory = value => {
     const { setFetchParams, setReviewType } = props;
     const params = {
-      classId: value === 'all' ? undefined : value,
+      categoryId: value === 'all' ? undefined : value,
     };
     setReviewType('more');
     setFetchParams(params);
@@ -38,11 +38,15 @@ const AddClass = props => {
 
   return (
     <div className={styles.container}>
-      <Select className={styles.select} defaultValue="all" onSelect={value => onSelectClass(value)}>
+      <Select
+        className={styles.select}
+        defaultValue="all"
+        onSelect={value => onSelectCategory(value)}
+      >
         <Option value="all" key="all">
           全部
         </Option>
-        {classList.map(item => {
+        {categoryList.map(item => {
           return (
             <Option value={item.id} key={item.name}>
               {item.name}
@@ -61,14 +65,14 @@ const AddClass = props => {
         visible={isShowModal}
         onCancel={() => setIsShowModal(false)}
         title="添加分类"
-        onOk={onSubmitClass}
+        onOk={onSubmitCategory}
         okText="确定"
         cancelText="取消"
       >
         <div className="label">类名:</div>
         <Input
-          onChange={e => setClassName(e.target.value)}
-          value={className}
+          onChange={e => setCategoryName(e.target.value)}
+          value={categoryName}
           style={{ width: 200 }}
         />
       </Modal>
@@ -76,4 +80,4 @@ const AddClass = props => {
   );
 };
 
-export default AddClass;
+export default AddCategory;
