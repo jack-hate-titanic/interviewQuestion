@@ -28,29 +28,15 @@ const AddQuestion = props => {
       if (!err) {
         const html = editor.toHTML();
         if (operationType === 'add') {
-          api
-            .createQuestion({ ...values, analysis: html })
-            .then(() => {
-              onCancel();
-            })
-            .catch(() => {
-              onCancel();
-            })
-            .finally(() => {
-              getData();
-            });
+          api.createQuestion({ ...values, analysis: html }).finally(() => {
+            onCancel();
+            getData();
+          });
         } else {
-          api
-            .updateQuestion({ ...values, id: questionDetail.id, analysis: html })
-            .then(response => {
-              onCancel();
-            })
-            .catch(() => {
-              onCancel();
-            })
-            .finally(() => {
-              getData();
-            });
+          api.updateQuestion({ ...values, id: questionDetail.id, analysis: html }).finally(() => {
+            onCancel();
+            getData();
+          });
         }
       }
     });
@@ -69,7 +55,7 @@ const AddQuestion = props => {
   return (
     <Form className="login-form" onSubmit={onCreate}>
       <Row gutter={32}>
-        <Col span={8}>
+        <Col xs={12} sm={12} lg={8}>
           <Form.Item>
             {getFieldDecorator('title', {
               initialValue: operationType === 'add' ? undefined : questionDetail.title,
@@ -82,7 +68,7 @@ const AddQuestion = props => {
             })(<Input placeholder="请输入试题名称" />)}
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col xs={12} sm={12} lg={8}>
           <Form.Item>
             {getFieldDecorator('categoryId', {
               initialValue: operationType === 'add' ? undefined : questionDetail.categoryId,

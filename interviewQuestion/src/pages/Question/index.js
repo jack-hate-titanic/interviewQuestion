@@ -16,6 +16,7 @@ const Question = () => {
   const [answerVisible, setAnswerVisible] = useState(false);
   const [questionCount, setQuestionCount] = useState();
   const [fetchParams, setFetchParams] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const columns = [
     {
@@ -55,14 +56,16 @@ const Question = () => {
   }, [fetchParams]);
 
   const getData = () => {
+    setLoading(true);
     api.getQuestion(fetchParams).then(response => {
       setQuestion(response?.rows);
       setQuestionCount(response?.count);
+      setLoading(false);
     });
   };
 
   const deleteQuestion = () => {
-    const deleteId = get(questions, `[${num}].id`);
+    const deleteId = get(questions[num], 'id');
     api
       .destroyQuestion({
         id: deleteId,
@@ -198,6 +201,7 @@ const Question = () => {
               size="small"
               pagination={false}
               rowKey="id"
+              loading={loading}
             />
           </div>
         )}
