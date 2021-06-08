@@ -27,7 +27,8 @@ class NormalLoginForm extends React.Component {
     return (
       <div className={styles.container}>
         <div className={styles.title}>
-          欢迎来到<span className={styles.name}>记忆魔法书</span>
+          <span className={styles.welcome}>Welcome to</span>{' '}
+          <span className={styles.name}>记忆魔法书</span>
         </div>
         <Form onSubmit={this.handleSubmit} className={styles.loginForm}>
           <Form.Item>
