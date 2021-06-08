@@ -1,5 +1,10 @@
 import { apiGET, apiPOST, apiPUT, apiDELETE, apiFileUpload } from './api_util';
 
+// 登录
+export async function Login(params) {
+  return apiPOST(`/login`, params);
+}
+
 // js试题部分
 export async function getQuestion(params) {
   return apiGET(`/question`, params);

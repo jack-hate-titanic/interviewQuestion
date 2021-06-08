@@ -18,3 +18,8 @@ export function get(object, path, defaultVal = 'undefined') {
     }, object) || defaultVal
   );
 }
+
+export function getUser() {
+  const jwt_token = localStorage.getItem('jwt_token');
+  return jwt_token;
+}

@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { notification, message } from 'antd';
+import { toLoginPage } from '@/utils/routers';
+import { getUser } from '@/utils/utils';
 
 axios.defaults.timeout = 15000;
 axios.defaults.baseURL = `/api`;
@@ -7,6 +9,8 @@ axios.defaults.withCredentials = false;
 
 axios.interceptors.request.use(
   config => {
+    const jwt_token = getUser();
+    config.headers.common['Authorization'] = jwt_token;
     return config; //添加这一行
   },
   error => {
@@ -23,6 +27,10 @@ export default function request(opt) {
           if (msg.includes('成功')) {
             message.success(msg);
           } else {
+            if (msg === '请登陆后再进行操作' || msg === '登录状态已过期') {
+              toLoginPage();
+              return;
+            }
             message.error(msg);
             return;
           }
