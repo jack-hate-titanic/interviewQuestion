@@ -93,7 +93,10 @@ const Question = () => {
           <div>
             <div className={styles.title}>记忆魔法书</div>
             <AddCategory
-              setFetchParams={params => setFetchParams({ ...fetchParams, ...params })}
+              setFetchParams={params => {
+                setFetchParams({ ...fetchParams, ...params });
+                setPagination({ page: 1 });
+              }}
               setReviewType={setReviewType}
             />
           </div>
