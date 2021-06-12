@@ -1,6 +1,8 @@
 import './index.less';
 import { Layout } from 'antd';
 import { PureComponent } from 'react';
+import { getUser } from '@/utils/utils';
+import { toLoginPage } from '@/utils/routers';
 
 const { Content, Footer } = Layout;
 

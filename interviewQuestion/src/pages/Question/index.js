@@ -4,7 +4,7 @@ import AddQuestion from '@/components/AddQuestion';
 import * as api from '../../services/api';
 import NoMoreQuestion from '@/components/NoMoreQuestion';
 import AddCategory from '@/components/AddCategory';
-import { get } from '../../utils/utils.js';
+import { get } from 'lodash';
 import styles from './index.less';
 
 const Question = () => {
@@ -17,6 +17,7 @@ const Question = () => {
   const [questionCount, setQuestionCount] = useState();
   const [fetchParams, setFetchParams] = useState({});
   const [loading, setLoading] = useState(false);
+  const [pagination, setPagination] = useState({});
 
   const columns = [
     {
@@ -49,15 +50,11 @@ const Question = () => {
 
   useEffect(() => {
     getData();
-  }, []);
-
-  useEffect(() => {
-    getData(fetchParams);
-  }, [fetchParams]);
+  }, [fetchParams, pagination]);
 
   const getData = () => {
     setLoading(true);
-    api.getQuestion(fetchParams).then(response => {
+    api.getQuestion({ ...fetchParams, ...pagination }).then(response => {
       setQuestion(response?.rows);
       setQuestionCount(response?.count);
       setLoading(false);
@@ -65,7 +62,7 @@ const Question = () => {
   };
 
   const deleteQuestion = () => {
-    const deleteId = get(questions[num], 'id');
+    const deleteId = get(questions, `${num}.id`);
     api
       .destroyQuestion({
         id: deleteId,
@@ -81,6 +78,10 @@ const Question = () => {
       });
   };
 
+  const changePagination = page => {
+    setPagination({ ...pagination, page });
+  };
+
   return (
     <div>
       <PageHeader
@@ -90,7 +91,7 @@ const Question = () => {
         }}
         title={
           <div>
-            <span className={styles.title}>前端面试题</span>
+            <div className={styles.title}>记忆魔法书</div>
             <AddCategory
               setFetchParams={params => setFetchParams({ ...fetchParams, ...params })}
               setReviewType={setReviewType}
@@ -202,6 +203,12 @@ const Question = () => {
               pagination={false}
               rowKey="id"
               loading={loading}
+              pagination={{
+                total: questionCount,
+                onChange: changePagination,
+                ...pagination,
+                hideOnSinglePage: true,
+              }}
             />
           </div>
         )}
@@ -218,8 +225,8 @@ const Question = () => {
           onCancel={() => setVisible(false)}
           operationType={operationType}
           getData={getData}
-          key={get(questions[num], 'id', {})}
-          questionDetail={questions[num]}
+          key={get(questions, `${num}.id`, {})}
+          questionDetail={get(questions, num)}
         />
       </Modal>
     </div>
