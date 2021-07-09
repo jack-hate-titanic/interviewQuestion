@@ -3,7 +3,7 @@ import { notification, message } from 'antd';
 import { toLoginPage } from '@/utils/routers';
 import { getUser } from '@/utils/utils';
 
-axios.defaults.timeout = 15000;
+axios.defaults.timeout = 150000;
 axios.defaults.baseURL = `/api`;
 axios.defaults.withCredentials = false;
 

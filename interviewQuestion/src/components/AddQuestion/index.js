@@ -55,7 +55,7 @@ const AddQuestion = props => {
   return (
     <Form className="login-form" onSubmit={onCreate}>
       <Row gutter={32}>
-        <Col xs={12} sm={12} lg={8}>
+        <Col xs={24} sm={24} lg={16}>
           <Form.Item>
             {getFieldDecorator('title', {
               initialValue: operationType === 'add' ? undefined : questionDetail.title,
@@ -68,7 +68,7 @@ const AddQuestion = props => {
             })(<Input placeholder="请输入试题名称" />)}
           </Form.Item>
         </Col>
-        <Col xs={12} sm={12} lg={8}>
+        <Col xs={24} sm={24} lg={8}>
           <Form.Item>
             {getFieldDecorator('categoryId', {
               initialValue: operationType === 'add' ? undefined : questionDetail.categoryId,

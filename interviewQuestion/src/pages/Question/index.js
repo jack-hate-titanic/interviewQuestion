@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Card, PageHeader, Icon, Tooltip, Popconfirm, Table, Modal } from 'antd';
+import { Button, Card, PageHeader, Icon, Tooltip, Popconfirm, Table, Modal, Input } from 'antd';
 import AddQuestion from '@/components/AddQuestion';
 import * as api from '../../services/api';
 import NoMoreQuestion from '@/components/NoMoreQuestion';
@@ -19,6 +19,7 @@ const Question = () => {
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState({});
 
+  const { Search } = Input;
   const columns = [
     {
       title: '序号',
@@ -82,6 +83,14 @@ const Question = () => {
     setPagination({ ...pagination, page });
   };
 
+  const onChangeSearch = name => {
+    setFetchParams({
+      ...fetchParams,
+      title: name,
+    });
+    setReviewType('more');
+  };
+
   return (
     <div>
       <PageHeader
@@ -102,15 +111,19 @@ const Question = () => {
           </div>
         }
         extra={
-          <Button
-            type="primary"
-            onClick={() => {
-              setVisible(true);
-              setOperationType('add');
-            }}
-          >
-            添加试题
-          </Button>
+          <div className={styles.extra}>
+            <Search placeholder="请输入试题关键字" onSearch={onChangeSearch} enterButton />
+            <Button
+              className="leftComponentDistance"
+              type="primary"
+              onClick={() => {
+                setVisible(true);
+                setOperationType('add');
+              }}
+            >
+              添加试题
+            </Button>
+          </div>
         }
       />
 
